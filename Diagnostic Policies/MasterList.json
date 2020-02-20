@@ -1,0 +1,1214 @@
+[
+    {
+      "displayName": "Deploy Diagnostic Settings: Azure Container Registries (Log Analytics) - [Costco v20190905.001]",
+      "policyType": "Custom",
+      "mode": "All",
+      "description": "This policy automatically deploys and enable diagnostic settings to Log Analytics",
+      "metadata": {
+        "category": "Monitoring",
+        "createdBy": "79f3f208-b7bf-4eae-86b7-59b4a98eb775",
+        "createdOn": "2019-09-26T17:51:30.240433Z",
+        "updatedBy": null,
+        "updatedOn": null
+      },
+      "parameters": {
+        "logAnalytics": {
+          "type": "String",
+          "metadata": {
+            "displayName": "Log Analyitcs workspace",
+            "description": "Select the Log Analytics workspace from dropdown list",
+            "strongType": "omsWorkspace"
+          }
+        }
+      },
+      "policyRule": {
+        "if": {
+          "field": "type",
+          "equals": "Microsoft.ContainerRegistry/registries"
+        },
+        "then": {
+          "effect": "deployIfNotExists",
+          "details": {
+            "type": "Microsoft.Insights/diagnosticSettings",
+            "roleDefinitionIds": [
+              "/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+            ],
+            "existenceCondition": {
+              "allOf": [
+                {
+                  "field": "Microsoft.Insights/diagnosticSettings/logs.enabled",
+                  "equals": "True"
+                },
+                {
+                  "field": "Microsoft.Insights/diagnosticSettings/metrics.enabled",
+                  "equals": "True"
+                },
+                {
+                  "field": "Microsoft.Insights/diagnosticSettings/workspaceId",
+                  "matchInsensitively": "[parameters('logAnalytics')]"
+                }
+              ]
+            },
+            "deployment": {
+              "properties": {
+                "mode": "incremental",
+                "template": {
+                  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                  "contentVersion": "1.0.0.0",
+                  "parameters": {
+                    "resourceName": {
+                      "type": "string"
+                    },
+                    "logAnalytics": {
+                      "type": "string"
+                    },
+                    "location": {
+                      "type": "string"
+                    }
+                  },
+                  "variables": {},
+                  "resources": [
+                    {
+                      "type": "Microsoft.ContainerRegistry/registries/providers/diagnosticSettings",
+                      "apiVersion": "2017-05-01-preview",
+                      "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/setByPolicy')]",
+                      "location": "[parameters('location')]",
+                      "dependsOn": [],
+                      "properties": {
+                        "workspaceId": "[parameters('logAnalytics')]",
+                        "metrics": "",
+                        "logs": ""
+                      }
+                    }
+                  ],
+                  "outputs": {}
+                },
+                "parameters": {
+                  "logAnalytics": {
+                    "value": "[parameters('logAnalytics')]"
+                  },
+                  "location": {
+                    "value": "[field('location')]"
+                  },
+                  "resourceName": {
+                    "value": "[field('name')]"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "displayName": "Deploy Diagnostic Settings: Azure Kubernetes Service (Log Analytics) - [Costco v20190905.001]",
+      "policyType": "Custom",
+      "mode": "All",
+      "description": "This policy automatically deploys and enable diagnostic settings to Log Analytics",
+      "metadata": {
+        "category": "Monitoring",
+        "createdBy": "79f3f208-b7bf-4eae-86b7-59b4a98eb775",
+        "createdOn": "2019-09-26T17:34:09.4274621Z",
+        "updatedBy": null,
+        "updatedOn": null
+      },
+      "parameters": {
+        "logAnalytics": {
+          "type": "String",
+          "metadata": {
+            "displayName": "Log Analyitcs workspace",
+            "description": "Select the Log Analytics workspace from dropdown list",
+            "strongType": "omsWorkspace"
+          }
+        }
+      },
+      "policyRule": {
+        "if": {
+          "field": "type",
+          "equals": "Microsoft.ContainerService/managedClusters"
+        },
+        "then": {
+          "effect": "deployIfNotExists",
+          "details": {
+            "type": "Microsoft.Insights/diagnosticSettings",
+            "roleDefinitionIds": [
+              "/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+            ],
+            "existenceCondition": {
+              "allOf": [
+                {
+                  "field": "Microsoft.Insights/diagnosticSettings/logs.enabled",
+                  "equals": "True"
+                },
+                {
+                  "field": "Microsoft.Insights/diagnosticSettings/metrics.enabled",
+                  "equals": "True"
+                },
+                {
+                  "field": "Microsoft.Insights/diagnosticSettings/workspaceId",
+                  "matchInsensitively": "[parameters('logAnalytics')]"
+                }
+              ]
+            },
+            "deployment": {
+              "properties": {
+                "mode": "incremental",
+                "template": {
+                  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                  "contentVersion": "1.0.0.0",
+                  "parameters": {
+                    "resourceName": {
+                      "type": "string"
+                    },
+                    "logAnalytics": {
+                      "type": "string"
+                    },
+                    "location": {
+                      "type": "string"
+                    }
+                  },
+                  "variables": {},
+                  "resources": [
+                    {
+                      "type": "Microsoft.ContainerService/managedClusters/providers/diagnosticSettings",
+                      "apiVersion": "2017-05-01-preview",
+                      "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/setByPolicy')]",
+                      "location": "[parameters('location')]",
+                      "dependsOn": [],
+                      "properties": {
+                        "workspaceId": "[parameters('logAnalytics')]",
+                        "metrics": "",
+                        "logs": "    "
+                      }
+                    }
+                  ],
+                  "outputs": {}
+                },
+                "parameters": {
+                  "logAnalytics": {
+                    "value": "[parameters('logAnalytics')]"
+                  },
+                  "location": {
+                    "value": "[field('location')]"
+                  },
+                  "resourceName": {
+                    "value": "[field('name')]"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "displayName": "Deploy Diagnostic Settings: Application Gateways (Log Analytics) - [Costco v20190905.001]",
+      "policyType": "Custom",
+      "mode": "All",
+      "description": "This policy automatically deploys and enable diagnostic settings to Log Analytics",
+      "metadata": {
+        "category": "Monitoring",
+        "createdBy": "79f3f208-b7bf-4eae-86b7-59b4a98eb775",
+        "createdOn": "2019-09-26T17:49:22.0869414Z",
+        "updatedBy": null,
+        "updatedOn": null
+      },
+      "parameters": {
+        "logAnalytics": {
+          "type": "String",
+          "metadata": {
+            "displayName": "Log Analyitcs workspace",
+            "description": "Select the Log Analytics workspace from dropdown list",
+            "strongType": "omsWorkspace"
+          }
+        }
+      },
+      "policyRule": {
+        "if": {
+          "field": "type",
+          "equals": "Microsoft.Network/applicationGateways"
+        },
+        "then": {
+          "effect": "deployIfNotExists",
+          "details": {
+            "type": "Microsoft.Insights/diagnosticSettings",
+            "roleDefinitionIds": [
+              "/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+            ],
+            "existenceCondition": {
+              "allOf": [
+                {
+                  "field": "Microsoft.Insights/diagnosticSettings/logs.enabled",
+                  "equals": "True"
+                },
+                {
+                  "field": "Microsoft.Insights/diagnosticSettings/metrics.enabled",
+                  "equals": "True"
+                },
+                {
+                  "field": "Microsoft.Insights/diagnosticSettings/workspaceId",
+                  "matchInsensitively": "[parameters('logAnalytics')]"
+                }
+              ]
+            },
+            "deployment": {
+              "properties": {
+                "mode": "incremental",
+                "template": {
+                  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                  "contentVersion": "1.0.0.0",
+                  "parameters": {
+                    "resourceName": {
+                      "type": "string"
+                    },
+                    "logAnalytics": {
+                      "type": "string"
+                    },
+                    "location": {
+                      "type": "string"
+                    }
+                  },
+                  "variables": {},
+                  "resources": [
+                    {
+                      "type": "Microsoft.Network/applicationGateways/providers/diagnosticSettings",
+                      "apiVersion": "2017-05-01-preview",
+                      "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/setByPolicy')]",
+                      "location": "[parameters('location')]",
+                      "dependsOn": [],
+                      "properties": {
+                        "workspaceId": "[parameters('logAnalytics')]",
+                        "metrics": "",
+                        "logs": "  "
+                      }
+                    }
+                  ],
+                  "outputs": {}
+                },
+                "parameters": {
+                  "logAnalytics": {
+                    "value": "[parameters('logAnalytics')]"
+                  },
+                  "location": {
+                    "value": "[field('location')]"
+                  },
+                  "resourceName": {
+                    "value": "[field('name')]"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "displayName": "Deploy Diagnostic Settings: Data Lake Analytics (Log Analytics) - [Costco v20190905.001]",
+      "policyType": "Custom",
+      "mode": "All",
+      "description": "This policy automatically deploys and enable diagnostic settings to Log Analytics",
+      "metadata": {
+        "category": "Monitoring",
+        "createdBy": "79f3f208-b7bf-4eae-86b7-59b4a98eb775",
+        "createdOn": "2019-09-26T17:27:47.7344641Z",
+        "updatedBy": null,
+        "updatedOn": null
+      },
+      "parameters": {
+        "logAnalytics": {
+          "type": "String",
+          "metadata": {
+            "displayName": "Log Analyitcs workspace",
+            "description": "Select the Log Analytics workspace from dropdown list",
+            "strongType": "omsWorkspace"
+          }
+        }
+      },
+      "policyRule": {
+        "if": {
+          "field": "type",
+          "equals": "Microsoft.DataLakeAnalytics/accounts"
+        },
+        "then": {
+          "effect": "deployIfNotExists",
+          "details": {
+            "type": "Microsoft.Insights/diagnosticSettings",
+            "roleDefinitionIds": [
+              "/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+            ],
+            "existenceCondition": {
+              "allOf": [
+                {
+                  "field": "Microsoft.Insights/diagnosticSettings/logs.enabled",
+                  "equals": "True"
+                },
+                {
+                  "field": "Microsoft.Insights/diagnosticSettings/metrics.enabled",
+                  "equals": "True"
+                },
+                {
+                  "field": "Microsoft.Insights/diagnosticSettings/workspaceId",
+                  "matchInsensitively": "[parameters('logAnalytics')]"
+                }
+              ]
+            },
+            "deployment": {
+              "properties": {
+                "mode": "incremental",
+                "template": {
+                  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                  "contentVersion": "1.0.0.0",
+                  "parameters": {
+                    "resourceName": {
+                      "type": "string"
+                    },
+                    "logAnalytics": {
+                      "type": "string"
+                    },
+                    "location": {
+                      "type": "string"
+                    }
+                  },
+                  "variables": {},
+                  "resources": [
+                    {
+                      "type": "Microsoft.DataLakeAnalytics/accounts/providers/diagnosticSettings",
+                      "apiVersion": "2017-05-01-preview",
+                      "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/setByPolicy')]",
+                      "location": "[parameters('location')]",
+                      "dependsOn": [],
+                      "properties": {
+                        "workspaceId": "[parameters('logAnalytics')]",
+                        "metrics": "",
+                        "logs": " "
+                      }
+                    }
+                  ],
+                  "outputs": {}
+                },
+                "parameters": {
+                  "logAnalytics": {
+                    "value": "[parameters('logAnalytics')]"
+                  },
+                  "location": {
+                    "value": "[field('location')]"
+                  },
+                  "resourceName": {
+                    "value": "[field('name')]"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "displayName": "Deploy Diagnostic Settings: Data Lake Storage (Log Analytics) - [Costco v20190905.001]",
+      "policyType": "Custom",
+      "mode": "All",
+      "description": "This policy automatically deploys and enable diagnostic settings to Log Analytics",
+      "metadata": {
+        "category": "Monitoring",
+        "createdBy": "79f3f208-b7bf-4eae-86b7-59b4a98eb775",
+        "createdOn": "2019-09-26T17:30:48.7951343Z",
+        "updatedBy": null,
+        "updatedOn": null
+      },
+      "parameters": {
+        "logAnalytics": {
+          "type": "String",
+          "metadata": {
+            "displayName": "Log Analyitcs workspace",
+            "description": "Select the Log Analytics workspace from dropdown list",
+            "strongType": "omsWorkspace"
+          }
+        }
+      },
+      "policyRule": {
+        "if": {
+          "field": "type",
+          "equals": "Microsoft.DataLakeStore/accounts"
+        },
+        "then": {
+          "effect": "deployIfNotExists",
+          "details": {
+            "type": "Microsoft.Insights/diagnosticSettings",
+            "roleDefinitionIds": [
+              "/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+            ],
+            "existenceCondition": {
+              "allOf": [
+                {
+                  "field": "Microsoft.Insights/diagnosticSettings/logs.enabled",
+                  "equals": "True"
+                },
+                {
+                  "field": "Microsoft.Insights/diagnosticSettings/metrics.enabled",
+                  "equals": "True"
+                },
+                {
+                  "field": "Microsoft.Insights/diagnosticSettings/workspaceId",
+                  "matchInsensitively": "[parameters('logAnalytics')]"
+                }
+              ]
+            },
+            "deployment": {
+              "properties": {
+                "mode": "incremental",
+                "template": {
+                  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                  "contentVersion": "1.0.0.0",
+                  "parameters": {
+                    "resourceName": {
+                      "type": "string"
+                    },
+                    "logAnalytics": {
+                      "type": "string"
+                    },
+                    "location": {
+                      "type": "string"
+                    }
+                  },
+                  "variables": {},
+                  "resources": [
+                    {
+                      "type": "Microsoft.DataLakeStore/accounts/providers/diagnosticSettings",
+                      "apiVersion": "2017-05-01-preview",
+                      "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/setByPolicy')]",
+                      "location": "[parameters('location')]",
+                      "dependsOn": [],
+                      "properties": {
+                        "workspaceId": "[parameters('logAnalytics')]",
+                        "metrics": "",
+                        "logs": " "
+                      }
+                    }
+                  ],
+                  "outputs": {}
+                },
+                "parameters": {
+                  "logAnalytics": {
+                    "value": "[parameters('logAnalytics')]"
+                  },
+                  "location": {
+                    "value": "[field('location')]"
+                  },
+                  "resourceName": {
+                    "value": "[field('name')]"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "displayName": "Deploy Diagnostic Settings: Key Vaults (Log Analytics) - [Costco v20190905.001]",
+      "policyType": "Custom",
+      "mode": "All",
+      "description": "This policy automatically deploys and enable diagnostic settings to Log Analytics",
+      "metadata": {
+        "category": "Monitoring",
+        "createdBy": "79f3f208-b7bf-4eae-86b7-59b4a98eb775",
+        "createdOn": "2019-09-05T23:29:42.1295475Z",
+        "updatedBy": null,
+        "updatedOn": null
+      },
+      "parameters": {
+        "logAnalytics": {
+          "type": "String",
+          "metadata": {
+            "displayName": "Log Analyitcs workspace",
+            "description": "Select the Log Analytics workspace from dropdown list",
+            "strongType": "omsWorkspace"
+          }
+        }
+      },
+      "policyRule": {
+        "if": {
+          "field": "type",
+          "equals": "Microsoft.KeyVault/vaults"
+        },
+        "then": {
+          "effect": "deployIfNotExists",
+          "details": {
+            "type": "Microsoft.Insights/diagnosticSettings",
+            "roleDefinitionIds": [
+              "/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+            ],
+            "existenceCondition": {
+              "allOf": [
+                {
+                  "field": "Microsoft.Insights/diagnosticSettings/logs.enabled",
+                  "equals": "True"
+                },
+                {
+                  "field": "Microsoft.Insights/diagnosticSettings/metrics.enabled",
+                  "equals": "True"
+                },
+                {
+                  "field": "Microsoft.Insights/diagnosticSettings/workspaceId",
+                  "matchInsensitively": "[parameters('logAnalytics')]"
+                }
+              ]
+            },
+            "deployment": {
+              "properties": {
+                "mode": "incremental",
+                "template": {
+                  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                  "contentVersion": "1.0.0.0",
+                  "parameters": {
+                    "resourceName": {
+                      "type": "string"
+                    },
+                    "logAnalytics": {
+                      "type": "string"
+                    },
+                    "location": {
+                      "type": "string"
+                    }
+                  },
+                  "variables": {},
+                  "resources": [
+                    {
+                      "type": "Microsoft.KeyVault/vaults/providers/diagnosticSettings",
+                      "apiVersion": "2017-05-01-preview",
+                      "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/setByPolicy')]",
+                      "location": "[parameters('location')]",
+                      "dependsOn": [],
+                      "properties": {
+                        "workspaceId": "[parameters('logAnalytics')]",
+                        "metrics": "",
+                        "logs": ""
+                      }
+                    }
+                  ],
+                  "outputs": {}
+                },
+                "parameters": {
+                  "logAnalytics": {
+                    "value": "[parameters('logAnalytics')]"
+                  },
+                  "location": {
+                    "value": "[field('location')]"
+                  },
+                  "resourceName": {
+                    "value": "[field('name')]"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "displayName": "Deploy Diagnostic Settings: PostgreSQL Databases (Log Analytics) - [Costco v20190905.001]",
+      "policyType": "Custom",
+      "mode": "All",
+      "description": "This policy automatically deploys and enable diagnostic settings to Log Analytics",
+      "metadata": {
+        "category": "Monitoring",
+        "createdBy": "79f3f208-b7bf-4eae-86b7-59b4a98eb775",
+        "createdOn": "2019-09-06T18:32:21.9939408Z",
+        "updatedBy": null,
+        "updatedOn": null
+      },
+      "parameters": {
+        "logAnalytics": {
+          "type": "String",
+          "metadata": {
+            "displayName": "Log Analyitcs workspace",
+            "description": "Select the Log Analytics workspace from dropdown list",
+            "strongType": "omsWorkspace"
+          }
+        }
+      },
+      "policyRule": {
+        "if": {
+          "field": "type",
+          "equals": "Microsoft.DBforPostgreSQL/servers"
+        },
+        "then": {
+          "effect": "deployIfNotExists",
+          "details": {
+            "type": "Microsoft.Insights/diagnosticSettings",
+            "roleDefinitionIds": [
+              "/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+            ],
+            "existenceCondition": {
+              "allOf": [
+                {
+                  "field": "Microsoft.Insights/diagnosticSettings/logs.enabled",
+                  "equals": "True"
+                },
+                {
+                  "field": "Microsoft.Insights/diagnosticSettings/metrics.enabled",
+                  "equals": "True"
+                },
+                {
+                  "field": "Microsoft.Insights/diagnosticSettings/workspaceId",
+                  "matchInsensitively": "[parameters('logAnalytics')]"
+                }
+              ]
+            },
+            "deployment": {
+              "properties": {
+                "mode": "incremental",
+                "template": {
+                  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                  "contentVersion": "1.0.0.0",
+                  "parameters": {
+                    "resourceName": {
+                      "type": "string"
+                    },
+                    "logAnalytics": {
+                      "type": "string"
+                    },
+                    "location": {
+                      "type": "string"
+                    }
+                  },
+                  "variables": {},
+                  "resources": [
+                    {
+                      "type": "Microsoft.DBforPostgreSQL/servers/providers/diagnosticSettings",
+                      "apiVersion": "2017-05-01-preview",
+                      "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/setByPolicy')]",
+                      "location": "[parameters('location')]",
+                      "dependsOn": [],
+                      "properties": {
+                        "workspaceId": "[parameters('logAnalytics')]",
+                        "metrics": "",
+                        "logs": ""
+                      }
+                    }
+                  ],
+                  "outputs": {}
+                },
+                "parameters": {
+                  "logAnalytics": {
+                    "value": "[parameters('logAnalytics')]"
+                  },
+                  "location": {
+                    "value": "[field('location')]"
+                  },
+                  "resourceName": {
+                    "value": "[field('name')]"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "displayName": "Deploy Diagnostic Settings: Redis Cache (Log Analytics) - [Costco v20190905.001]",
+      "policyType": "Custom",
+      "mode": "All",
+      "description": "This policy automatically deploys and enable diagnostic settings to Log Analytics",
+      "metadata": {
+        "category": "Monitoring",
+        "createdBy": "79f3f208-b7bf-4eae-86b7-59b4a98eb775",
+        "createdOn": "2019-09-26T17:53:40.0328594Z",
+        "updatedBy": null,
+        "updatedOn": null
+      },
+      "parameters": {
+        "logAnalytics": {
+          "type": "String",
+          "metadata": {
+            "displayName": "Log Analyitcs workspace",
+            "description": "Select the Log Analytics workspace from dropdown list",
+            "strongType": "omsWorkspace"
+          }
+        }
+      },
+      "policyRule": {
+        "if": {
+          "field": "type",
+          "equals": "Microsoft.Cache/redis"
+        },
+        "then": {
+          "effect": "deployIfNotExists",
+          "details": {
+            "type": "Microsoft.Insights/diagnosticSettings",
+            "roleDefinitionIds": [
+              "/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+            ],
+            "existenceCondition": {
+              "allOf": [
+                {
+                  "field": "Microsoft.Insights/diagnosticSettings/logs.enabled",
+                  "equals": "True"
+                },
+                {
+                  "field": "Microsoft.Insights/diagnosticSettings/metrics.enabled",
+                  "equals": "True"
+                },
+                {
+                  "field": "Microsoft.Insights/diagnosticSettings/workspaceId",
+                  "matchInsensitively": "[parameters('logAnalytics')]"
+                }
+              ]
+            },
+            "deployment": {
+              "properties": {
+                "mode": "incremental",
+                "template": {
+                  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                  "contentVersion": "1.0.0.0",
+                  "parameters": {
+                    "resourceName": {
+                      "type": "string"
+                    },
+                    "logAnalytics": {
+                      "type": "string"
+                    },
+                    "location": {
+                      "type": "string"
+                    }
+                  },
+                  "variables": {},
+                  "resources": [
+                    {
+                      "type": "Microsoft.Cache/redis/providers/diagnosticSettings",
+                      "apiVersion": "2017-05-01-preview",
+                      "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/setByPolicy')]",
+                      "location": "[parameters('location')]",
+                      "dependsOn": [],
+                      "properties": {
+                        "workspaceId": "[parameters('logAnalytics')]",
+                        "metrics": "",
+                        "logs": ""
+                      }
+                    }
+                  ],
+                  "outputs": {}
+                },
+                "parameters": {
+                  "logAnalytics": {
+                    "value": "[parameters('logAnalytics')]"
+                  },
+                  "location": {
+                    "value": "[field('location')]"
+                  },
+                  "resourceName": {
+                    "value": "[field('name')]"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "displayName": "Deploy Diagnostic Settings: SQL Managed Instances (Log Analytics) - [Costco v20190905.001]",
+      "policyType": "Custom",
+      "mode": "All",
+      "description": "This policy automatically deploys and enable diagnostic settings to Log Analytics",
+      "metadata": {
+        "category": "Monitoring",
+        "createdBy": "79f3f208-b7bf-4eae-86b7-59b4a98eb775",
+        "createdOn": "2019-08-23T20:37:57.0480055Z",
+        "updatedBy": "79f3f208-b7bf-4eae-86b7-59b4a98eb775",
+        "updatedOn": "2019-09-06T18:34:14.4385062Z"
+      },
+      "parameters": {
+        "logAnalytics": {
+          "type": "String",
+          "metadata": {
+            "displayName": "Log Analyitcs workspace",
+            "description": "Select the Log Analytics workspace from dropdown list",
+            "strongType": "omsWorkspace"
+          }
+        }
+      },
+      "policyRule": {
+        "if": {
+          "field": "type",
+          "equals": "Microsoft.Sql/managedInstances"
+        },
+        "then": {
+          "effect": "deployIfNotExists",
+          "details": {
+            "type": "Microsoft.Insights/diagnosticSettings",
+            "roleDefinitionIds": [
+              "/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+            ],
+            "existenceCondition": {
+              "allOf": [
+                {
+                  "field": "Microsoft.Insights/diagnosticSettings/logs.enabled",
+                  "equals": "True"
+                },
+                {
+                  "field": "Microsoft.Insights/diagnosticSettings/metrics.enabled",
+                  "equals": "True"
+                },
+                {
+                  "field": "Microsoft.Insights/diagnosticSettings/workspaceId",
+                  "matchInsensitively": "[parameters('logAnalytics')]"
+                }
+              ]
+            },
+            "deployment": {
+              "properties": {
+                "mode": "incremental",
+                "template": {
+                  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                  "contentVersion": "1.0.0.0",
+                  "parameters": {
+                    "resourceName": {
+                      "type": "string"
+                    },
+                    "logAnalytics": {
+                      "type": "string"
+                    },
+                    "location": {
+                      "type": "string"
+                    }
+                  },
+                  "variables": {},
+                  "resources": [
+                    {
+                      "type": "Microsoft.Sql/managedInstances/providers/diagnosticSettings",
+                      "apiVersion": "2017-05-01-preview",
+                      "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/setByPolicy')]",
+                      "location": "[parameters('location')]",
+                      "dependsOn": [],
+                      "properties": {
+                        "workspaceId": "[parameters('logAnalytics')]",
+                        "logs": " "
+                      }
+                    }
+                  ],
+                  "outputs": {}
+                },
+                "parameters": {
+                  "logAnalytics": {
+                    "value": "[parameters('logAnalytics')]"
+                  },
+                  "location": {
+                    "value": "[field('location')]"
+                  },
+                  "resourceName": {
+                    "value": "[field('name')]"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "displayName": "Deploy Diagnostic Settings: Azure App Service Plans (Log Analytics) - [Costco v20190905.001]",
+      "policyType": "Custom",
+      "mode": "All",
+      "description": "This policy automatically deploys and enable diagnostic settings to Log Analytics",
+      "metadata": {
+        "category": "Monitoring",
+        "createdBy": "79f3f208-b7bf-4eae-86b7-59b4a98eb775",
+        "createdOn": "2019-09-26T17:58:39.7423971Z",
+        "updatedBy": null,
+        "updatedOn": null
+      },
+      "parameters": {
+        "logAnalytics": {
+          "type": "String",
+          "metadata": {
+            "displayName": "Log Analyitcs workspace",
+            "description": "Select the Log Analytics workspace from dropdown list",
+            "strongType": "omsWorkspace"
+          }
+        }
+      },
+      "policyRule": {
+        "if": {
+          "field": "type",
+          "equals": "Microsoft.Web/serverfarms"
+        },
+        "then": {
+          "effect": "deployIfNotExists",
+          "details": {
+            "type": "Microsoft.Insights/diagnosticSettings",
+            "roleDefinitionIds": [
+              "/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+            ],
+            "existenceCondition": {
+              "allOf": [
+                {
+                  "field": "Microsoft.Insights/diagnosticSettings/logs.enabled",
+                  "equals": "True"
+                },
+                {
+                  "field": "Microsoft.Insights/diagnosticSettings/metrics.enabled",
+                  "equals": "True"
+                },
+                {
+                  "field": "Microsoft.Insights/diagnosticSettings/workspaceId",
+                  "matchInsensitively": "[parameters('logAnalytics')]"
+                }
+              ]
+            },
+            "deployment": {
+              "properties": {
+                "mode": "incremental",
+                "template": {
+                  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                  "contentVersion": "1.0.0.0",
+                  "parameters": {
+                    "resourceName": {
+                      "type": "string"
+                    },
+                    "logAnalytics": {
+                      "type": "string"
+                    },
+                    "location": {
+                      "type": "string"
+                    }
+                  },
+                  "variables": {},
+                  "resources": [
+                    {
+                      "type": "Microsoft.Web/serverfarms/providers/diagnosticSettings",
+                      "apiVersion": "2017-05-01-preview",
+                      "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/setByPolicy')]",
+                      "location": "[parameters('location')]",
+                      "dependsOn": [],
+                      "properties": {
+                        "workspaceId": "[parameters('logAnalytics')]",
+                        "metrics": "",
+                        "logs": ""
+                      }
+                    }
+                  ],
+                  "outputs": {}
+                },
+                "parameters": {
+                  "logAnalytics": {
+                    "value": "[parameters('logAnalytics')]"
+                  },
+                  "location": {
+                    "value": "[field('location')]"
+                  },
+                  "resourceName": {
+                    "value": "[field('name')]"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "displayName": "Deploy Diagnostic Settings: Azure Web Sites (Log Analytics) - [Costco v20190905.001]",
+      "policyType": "Custom",
+      "mode": "All",
+      "description": "This policy automatically deploys and enable diagnostic settings to Log Analytics",
+      "metadata": {
+        "category": "Monitoring",
+        "createdBy": "79f3f208-b7bf-4eae-86b7-59b4a98eb775",
+        "createdOn": "2019-09-26T17:56:15.044558Z",
+        "updatedBy": null,
+        "updatedOn": null
+      },
+      "parameters": {
+        "logAnalytics": {
+          "type": "String",
+          "metadata": {
+            "displayName": "Log Analyitcs workspace",
+            "description": "Select the Log Analytics workspace from dropdown list",
+            "strongType": "omsWorkspace"
+          }
+        }
+      },
+      "policyRule": {
+        "if": {
+          "field": "type",
+          "equals": "Microsoft.Web/sites"
+        },
+        "then": {
+          "effect": "deployIfNotExists",
+          "details": {
+            "type": "Microsoft.Insights/diagnosticSettings",
+            "roleDefinitionIds": [
+              "/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+            ],
+            "existenceCondition": {
+              "allOf": [
+                {
+                  "field": "Microsoft.Insights/diagnosticSettings/logs.enabled",
+                  "equals": "True"
+                },
+                {
+                  "field": "Microsoft.Insights/diagnosticSettings/metrics.enabled",
+                  "equals": "True"
+                },
+                {
+                  "field": "Microsoft.Insights/diagnosticSettings/workspaceId",
+                  "matchInsensitively": "[parameters('logAnalytics')]"
+                }
+              ]
+            },
+            "deployment": {
+              "properties": {
+                "mode": "incremental",
+                "template": {
+                  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                  "contentVersion": "1.0.0.0",
+                  "parameters": {
+                    "resourceName": {
+                      "type": "string"
+                    },
+                    "logAnalytics": {
+                      "type": "string"
+                    },
+                    "location": {
+                      "type": "string"
+                    }
+                  },
+                  "variables": {},
+                  "resources": [
+                    {
+                      "type": "Microsoft.Web/sites/providers/diagnosticSettings",
+                      "apiVersion": "2017-05-01-preview",
+                      "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/setByPolicy')]",
+                      "location": "[parameters('location')]",
+                      "dependsOn": [],
+                      "properties": {
+                        "workspaceId": "[parameters('logAnalytics')]",
+                        "metrics": "",
+                        "logs": ""
+                      }
+                    }
+                  ],
+                  "outputs": {}
+                },
+                "parameters": {
+                  "logAnalytics": {
+                    "value": "[parameters('logAnalytics')]"
+                  },
+                  "location": {
+                    "value": "[field('location')]"
+                  },
+                  "resourceName": {
+                    "value": "[field('name')]"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "displayName": "[Costco V1.0] - nsg-diag-set-policyDef",
+      "policyType": "Custom",
+      "mode": "All",
+      "description": "Created 8/7/19\n\n\"This policy automatically deploys and enable diagnostic settings to Log Analytics\"\n",
+      "metadata": {
+        "category": "Monitoring",
+        "createdBy": "3c217cb4-f393-44b1-b9aa-552cec01b137",
+        "createdOn": "2019-08-08T03:28:54.5360154Z",
+        "updatedBy": null,
+        "updatedOn": null
+      },
+      "parameters": {
+        "logAnalytics": {
+          "type": "String",
+          "metadata": {
+            "displayName": "Log Analyitcs workspace",
+            "description": "Select the Log Analytics workspace from dropdown list",
+            "strongType": "omsWorkspace"
+          }
+        }
+      },
+      "policyRule": {
+        "if": {
+          "field": "type",
+          "equals": "Microsoft.Network/networkSecurityGroups"
+        },
+        "then": {
+          "effect": "deployIfNotExists",
+          "details": {
+            "type": "Microsoft.Insights/diagnosticSettings",
+            "roleDefinitionIds": [
+              "/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+            ],
+            "existenceCondition": {
+              "allOf": [
+                {
+                  "field": "Microsoft.Insights/diagnosticSettings/logs.enabled",
+                  "equals": "True"
+                },
+                {
+                  "field": "Microsoft.Insights/diagnosticSettings/metrics.enabled",
+                  "equals": "True"
+                },
+                {
+                  "field": "Microsoft.Insights/diagnosticSettings/workspaceId",
+                  "matchInsensitively": "[parameters('logAnalytics')]"
+                }
+              ]
+            },
+            "deployment": {
+              "properties": {
+                "mode": "incremental",
+                "template": {
+                  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                  "contentVersion": "1.0.0.0",
+                  "parameters": {
+                    "resourceName": {
+                      "type": "string"
+                    },
+                    "logAnalytics": {
+                      "type": "string"
+                    },
+                    "location": {
+                      "type": "string"
+                    }
+                  },
+                  "variables": {},
+                  "resources": [
+                    {
+                      "type": "Microsoft.Network/networkSecurityGroups/providers/diagnosticSettings",
+                      "apiVersion": "2017-05-01-preview",
+                      "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/setByPolicy')]",
+                      "location": "[parameters('location')]",
+                      "dependsOn": [],
+                      "properties": {
+                        "workspaceId": "[parameters('logAnalytics')]",
+                        "metrics": "",
+                        "logs": " "
+                      }
+                    }
+                  ],
+                  "outputs": {}
+                },
+                "parameters": {
+                  "logAnalytics": {
+                    "value": "[parameters('logAnalytics')]"
+                  },
+                  "location": {
+                    "value": "[field('location')]"
+                  },
+                  "resourceName": {
+                    "value": "[field('name')]"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+  

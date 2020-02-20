@@ -1,0 +1,14 @@
+{
+    "effect": {
+        "value": "DeployIfNotExists"
+    },
+    "profileName": {
+        "value": "setbypolicy_logAnalytics"
+    },
+    "logAnalytics": {
+        "value":"/subscriptions/d41c5056-0bf3-447a-b0d8-9b9084a826f4/resourcegroups/alaws/providers/microsoft.operationalinsights/workspaces/lunchboxrclws"
+    },
+    "metricsEnabled": {
+        "value": "True"
+    }
+}

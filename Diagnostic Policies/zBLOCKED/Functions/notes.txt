@@ -1,0 +1,3 @@
+Has app insights (which hopefully will go to ALA)
+Has activity log (which is set at sub level)
+No diagnostic settings available (can save OS logs to FTP)

@@ -1,0 +1,78 @@
+{ "analytics": [
+{
+  "DisplayName": "bogusHunt",
+  "Query": "AzureActivity | where Caller contains \"notmyaccount\" | extend AccountCustomEntity = Caller",
+  "Description": "I'm a bogus hunting operation",
+  "Tactics": [
+    "CredentialAccess",
+    "Persistence"
+  ]
+}
+,
+{
+  "DisplayName": "bogusHunt4",
+  "Query": "AzureActivity | where Caller contains \"notmyaccount\" | extend AccountCustomEntity = Caller",
+  "Description": "I'm a bogus hunting operation",
+  "Tactics": [
+    "CredentialAccess",
+    "Persistence"
+  ]
+}
+,
+{
+  "DisplayName": "Catch Chris22",
+  "Query": "AzureActivity | where Caller == \"chris@richardclakegmail.onmicrosoft.com\"",
+  "Description": "",
+  "Tactics": [
+    "CommandAndControl"
+  ]
+}
+,
+{
+  "DisplayName": "bogusHunt2",
+  "Query": "AzureActivity | where Caller contains \"notmyaccount\" | extend AccountCustomEntity = Caller",
+  "Description": "I'm a bogus hunting operation",
+  "Tactics": [
+    "CredentialAccess",
+    "Persistence"
+  ]
+}
+,
+{
+  "DisplayName": "bogusHunt4",
+  "Query": "AzureActivity | where Caller contains \"notmyaccount\" | extend AccountCustomEntity = Caller",
+  "Description": "I'm a bogus hunting operation",
+  "Tactics": [
+    "CredentialAccess",
+    "Persistence"
+  ]
+}
+,
+{
+  "DisplayName": "bogusHunt3",
+  "Query": "AzureActivity | where Caller contains \"notmyaccount\" | extend AccountCustomEntity = Caller",
+  "Description": "I'm a bogus hunting operation",
+  "Tactics": [
+    "CredentialAccess",
+    "Persistence"
+  ]
+}
+,
+{
+  "DisplayName": "EMPTY TACTICS",
+  "Query": "AzureActivity | where Caller == \"chris@richardclakegmail.onmicrosoft.com\"",
+  "Description": "",
+  "Tactics": [
+    ""
+  ]
+}
+,
+{
+  "DisplayName": "Catch Chris2",
+  "Query": "AzureActivity | where Caller == \"chris@richardclakegmail.onmicrosoft.com\"",
+  "Description": "",
+  "Tactics": [
+    "CommandAndControl"
+  ]
+}
+]}

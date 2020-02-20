@@ -1,0 +1,1 @@
+Storage Accounts are a bit wonky.  Azure Security Center provides Threat Detection for BLOB Storage only

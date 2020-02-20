@@ -1,0 +1,1 @@
+Is this Event Grid Domain, Topic, or Azure Event Grid on IoT Edge
