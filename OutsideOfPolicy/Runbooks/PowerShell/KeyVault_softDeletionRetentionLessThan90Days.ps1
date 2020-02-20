@@ -20,7 +20,11 @@ catch {
         throw $_.Exception
     }
 }
+
+#modify these
 $query = "Resources | where type =~ 'microsoft.keyvault/vaults' | where properties.softDeleteRetentionInDays < 90"
+$resourceType = 'microsoft.keyvault'
+
 $results = Search-AzGraph -Query $query
 $objArray = @()
 foreach($result in $results){
@@ -30,6 +34,7 @@ foreach($result in $results){
         ResourceID = $result.ResourceID
         ResourceLocation = $result.Location
         FailedQuery = $query
+        ResourceType = $resourceType
     }
 
     $objArray += $obj
