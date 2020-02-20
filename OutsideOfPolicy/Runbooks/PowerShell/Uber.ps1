@@ -1,4 +1,4 @@
-Import-Module -Name Az.ResourceGraph
+<#Import-Module -Name Az.ResourceGraph
 
 $connectionName = "AzureRunAsConnection"
 try
@@ -19,13 +19,12 @@ catch {
         Write-Error -Message $_.Exception
         throw $_.Exception
     }
-}
+}#>
 
-#modify these
-$query = "Resources | where type =~ 'microsoft.keyvault/vaults' | where properties.softDeleteRetentionInDays < 90"
-$resourceType = 'microsoft.keyvault'
+$Queries = Import-CSV -Path
 
-$results = Search-AzGraph -Query $query
+    
+<#$results = Search-AzGraph -Query "Resources | where type =~ 'microsoft.keyvault/vaults' | where properties.softDeleteRetentionInDays < 90"
 $objArray = @()
 foreach($result in $results){
     $obj = [PSCustomObject]@{
@@ -33,11 +32,9 @@ foreach($result in $results){
         ResourceGroupName = $result.ResourceGroup
         ResourceID = $result.ResourceID
         ResourceLocation = $result.Location
-        FailedQuery = $query
-        ResourceType = $resourceType
     }
 
     $objArray += $obj
 }
 
-Write-Output ($objArray | Convertto-Json -Depth 5)
+Write-Output ($objArray | Convertto-Json -Depth 5)#>
