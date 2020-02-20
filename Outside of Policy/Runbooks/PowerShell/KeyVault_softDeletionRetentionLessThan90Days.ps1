@@ -6,13 +6,6 @@ try
     # Get the connection "AzureRunAsConnection "
     $servicePrincipalConnection=Get-AutomationConnection -Name $connectionName         
 
-    "Logging in to Azure..."
-    Add-AzureRmAccount `
-        -ServicePrincipal `
-        -TenantId $servicePrincipalConnection.TenantId `
-        -ApplicationId $servicePrincipalConnection.ApplicationId `
-        -CertificateThumbprint $servicePrincipalConnection.CertificateThumbprint | Out-Null
-
     Connect-AzAccount -CertificateThumbprint $servicePrincipalConnection.CertificateThumbprint `
         -TenantId $servicePrincipalConnection.TenantId `
         -ApplicationId $servicePrincipalConnection.ApplicationId | Out-Null
@@ -28,7 +21,7 @@ catch {
     }
 }
 
-$results = Search-AzGraph -Query "Resources | where type =~ 'microsoft.keyvault/vaults' | where properties.softDeleteRetentionInDays <= 90"
+$results = Search-AzGraph -Query "Resources | where type =~ 'microsoft.keyvault/vaults' | where properties.softDeleteRetentionInDays < 90"
 $objArray = @()
 foreach($result in $results){
     $obj = [PSCustomObject]@{
