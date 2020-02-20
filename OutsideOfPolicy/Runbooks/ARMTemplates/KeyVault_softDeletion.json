@@ -1,0 +1,41 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "automationAccounts_testing_name": {
+            "defaultValue": "Outside-Policy-Checker",
+            "type": "String"
+        },
+        "location":{
+            "type":"String",
+			"defaultValue": "[resourceGroup().location]"
+        },
+        "runBookName":{
+            "type":"String"
+        },
+        "description":{
+            "type":"String"
+        }
+    },
+    "variables": {
+        "baseURI":"https://raw.githubusercontent.com/lunchbox-rcl/cpol/master/OutsideOfPolicy/Runbooks/PowerShell" 
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Automation/automationAccounts/runbooks",
+            "apiVersion": "2018-06-30",
+            "name": "[concat(parameters('automationAccounts_testing_name'), '/', parameters('runBookName'))]",
+            "location": "[parameters('location')]",
+            "properties": {
+                "description": "[parameters('description')]",
+                "publishContentLink":{
+                    "uri":"[concat(variables('baseURI'), '/', parameters('runBookName'), '.ps1')]"
+                },
+                "logVerbose": false,
+                "logProgress": false,
+                "logActivityTrace": 0,
+                "runbookType": "PowerShell"
+            }
+        }
+    ]
+}
