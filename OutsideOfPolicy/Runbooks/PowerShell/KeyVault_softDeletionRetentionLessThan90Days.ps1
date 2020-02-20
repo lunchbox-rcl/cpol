@@ -34,4 +34,4 @@ foreach($result in $results){
     $objArray += $obj
 }
 
-Write-Output ($objArray | Convertto-Json -Depth 5 -AsArray)
+Write-Output ($objArray | Convertto-Json -Depth 5)
