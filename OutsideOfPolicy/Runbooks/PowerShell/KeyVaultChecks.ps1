@@ -24,7 +24,7 @@ catch {
 #modify these
 #TODO: Figure out how we can just have this as a CSV that Azure Automation can ingest
 $queries = "Resources | where type =~ 'microsoft.keyvault/vaults' | where properties.softDeleteRetentionInDays < 90", `
-            "Resources | where type =~ 'microsoft.keyvaults/vaults | where properties.softDeleteRetentionInDays > 180"
+            "Resources | where type =~ 'microsoft.keyvaults/vaults' | where properties.softDeleteRetentionInDays > 180"
 $resourceType = 'microsoft.keyvault'
 
 
