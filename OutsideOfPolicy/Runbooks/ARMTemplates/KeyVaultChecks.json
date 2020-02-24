@@ -2,10 +2,6 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "automationAccounts_testing_name": {
-            "defaultValue": "Outside-Policy-Checker",
-            "type": "String"
-        },
         "location":{
             "type":"String",
 			"defaultValue": "[resourceGroup().location]"
@@ -15,16 +11,26 @@
         },
         "description":{
             "type":"String"
+        },
+        "distributionList":{
+            "type":"String"
+        },
+        "userName":{
+            "type":"String",
+            "defaultValue": "<first.lake@somewhere.com>"
         }
     },
     "variables": {
-        "baseURI":"https://raw.githubusercontent.com/lunchbox-rcl/cpol/master/OutsideOfPolicy/Runbooks/PowerShell" 
+        "baseURI":"https://raw.githubusercontent.com/lunchbox-rcl/cpol/master/OutsideOfPolicy/Runbooks/PowerShell",
+        "automationAccountName":"Outside-Policy-Checker",
+        "connections_outlook":"outlook",
+        "connections_azureautomation":"azureautomation"
     },
     "resources": [
         {
             "type": "Microsoft.Automation/automationAccounts/runbooks",
             "apiVersion": "2018-06-30",
-            "name": "[concat(parameters('automationAccounts_testing_name'), '/', parameters('runBookName'))]",
+            "name": "[concat(variables('automationAccountName'), '/', parameters('runBookName'))]",
             "location": "[parameters('location')]",
             "properties": {
                 "description": "[parameters('description')]",
@@ -35,6 +41,290 @@
                 "logProgress": false,
                 "logActivityTrace": 0,
                 "runbookType": "PowerShell"
+            }
+        },
+        {
+            "type": "Microsoft.Web/connections",
+            "apiVersion": "2016-06-01",
+            "name": "[variables('connections_azureautomation')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "displayName": "[parameters('userName')]",
+                "customParameterValues": {},
+                "api": {
+                    "id": "[concat('/subscriptions/',subscription().subscriptionId,'/providers/Microsoft.Web/locations/',resourceGroup().location,'/managedApis/', variables('connections_azureautomation'))]"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Web/connections",
+            "apiVersion": "2016-06-01",
+            "name": "[variables('connections_outlook')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "displayName": "[parameters('userName')]",
+                "customParameterValues": {},
+                "api": {
+                    "id": "[concat('/subscriptions/',subscription().subscriptionId,'/providers/Microsoft.Web/locations/',resourceGroup().location,'/managedApis/', variables('connections_outlook'))]"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Logic/workflows",
+            "apiVersion": "2017-07-01",
+            "name": "[concat(parameters('runBookName'),'-LA')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/connections', variables('connections_azureautomation'))]",
+                "[resourceId('Microsoft.Web/connections', variables('connections_outlook'))]"
+            ],
+            "properties": {
+                "state": "Disabled",
+                "definition": {
+                    "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+                    "contentVersion": "1.0.0.0",
+                    "parameters": {
+                        "$connections": {
+                            "defaultValue": {},
+                            "type": "Object"
+                        }
+                    },
+                    "triggers": {
+                        "Recurrence": {
+                            "recurrence": {
+                                "frequency": "Day",
+                                "interval": 1
+                            },
+                            "type": "Recurrence"
+                        }
+                    },
+                    "actions": {
+                        "Condition": {
+                            "actions": {
+                                "Condition_2": {
+                                    "actions": {
+                                        "Append_to_array_variable": {
+                                            "runAfter": {
+                                                "Parse_JSON": [
+                                                    "Succeeded"
+                                                ]
+                                            },
+                                            "type": "AppendToArrayVariable",
+                                            "inputs": {
+                                                "name": "Results",
+                                                "value": "@body('Parse_JSON')"
+                                            }
+                                        },
+                                        "Parse_JSON": {
+                                            "runAfter": {},
+                                            "type": "ParseJson",
+                                            "inputs": {
+                                                "content": "@body('Get_job_output')",
+                                                "schema": {
+                                                    "items": {
+                                                        "properties": {
+                                                            "FailedQuery": {
+                                                                "type": "string"
+                                                            },
+                                                            "ResourceGroupName": {
+                                                                "type": "string"
+                                                            },
+                                                            "ResourceID": {
+                                                                "type": "string"
+                                                            },
+                                                            "ResourceLocation": {
+                                                                "type": "string"
+                                                            },
+                                                            "ResourceName": {
+                                                                "type": "string"
+                                                            }
+                                                        },
+                                                        "required": [
+                                                            "ResourceName",
+                                                            "ResourceGroupName",
+                                                            "ResourceID",
+                                                            "ResourceLocation",
+                                                            "FailedQuery"
+                                                        ],
+                                                        "type": "object"
+                                                    },
+                                                    "type": "array"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "runAfter": {},
+                                    "else": {
+                                        "actions": {
+                                            "Append_to_array_variable_2": {
+                                                "runAfter": {
+                                                    "Parse_JSON_2": [
+                                                        "Succeeded"
+                                                    ]
+                                                },
+                                                "type": "AppendToArrayVariable",
+                                                "inputs": {
+                                                    "name": "Results",
+                                                    "value": "@body('Parse_JSON_2')"
+                                                }
+                                            },
+                                            "Parse_JSON_2": {
+                                                "runAfter": {},
+                                                "type": "ParseJson",
+                                                "inputs": {
+                                                    "content": "@body('Get_job_output')",
+                                                    "schema": {
+                                                        "properties": {
+                                                            "ResourceGroupName": {
+                                                                "type": "string"
+                                                            },
+                                                            "ResourceID": {
+                                                                "type": "string"
+                                                            },
+                                                            "ResourceLocation": {
+                                                                "type": "string"
+                                                            },
+                                                            "ResourceName": {
+                                                                "type": "string"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "expression": {
+                                        "and": [
+                                            {
+                                                "startsWith": [
+                                                    "@body('Get_job_output')",
+                                                    "[[["
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    "type": "If"
+                                },
+                                "Send_an_email_(V2)": {
+                                    "runAfter": {
+                                        "Condition_2": [
+                                            "Succeeded"
+                                        ]
+                                    },
+                                    "type": "ApiConnection",
+                                    "inputs": {
+                                        "body": {
+                                            "Body": "<p>The following resources failed the custom complaince checks for: @{variables('results')[0].ResourceType}<br>\n<br>\n@{variables('results')}</p>",
+                                            "Subject": "Failed Compliance Check:   @{variables('results')[0].ResourceType}",
+                                            "To": "[parameters('distributionList')]"
+                                        },
+                                        "host": {
+                                            "connection": {
+                                                "name": "@parameters('$connections')['outlook']['connectionId']"
+                                            }
+                                        },
+                                        "method": "post",
+                                        "path": "/v2/Mail"
+                                    }
+                                }
+                            },
+                            "runAfter": {
+                                "Get_job_output": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "expression": {
+                                "or": [
+                                    {
+                                        "contains": [
+                                            "@body('Get_job_output')",
+                                            "[[["
+                                        ]
+                                    },
+                                    {
+                                        "contains": [
+                                            "@body('Get_job_output')",
+                                            "{"
+                                        ]
+                                    }
+                                ]
+                            },
+                            "type": "If"
+                        },
+                        "Create_job": {
+                            "runAfter": {
+                                "Initialize_variable": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "ApiConnection",
+                            "inputs": {
+                                "host": {
+                                    "connection": {
+                                        "name": "@parameters('$connections')['azureautomation']['connectionId']"
+                                    }
+                                },
+                                "method": "put",
+                                "path": "[concat('/subscriptions/',subscription().subscriptionID,'/resourceGroups/',resourceGroup().name,'/providers/Microsoft.Automation/automationAccounts/',variables('automationAccountName'),'/jobs')]",
+                                "queries": {
+                                    "runbookName": "[parameters('runBookName')]",
+                                    "wait": true,
+                                    "x-ms-api-version": "2015-10-31"
+                                }
+                            }
+                        },
+                        "Get_job_output": {
+                            "runAfter": {
+                                "Create_job": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "ApiConnection",
+                            "inputs": {
+                                "host": {
+                                    "connection": {
+                                        "name": "@parameters('$connections')['azureautomation']['connectionId']"
+                                    }
+                                },
+                                "method": "get",
+                                "path": "[concat('/subscriptions/',subscription().subscriptionID,'/resourceGroups/',resourceGroup().name,'/providers/Microsoft.Automation/automationAccounts/',variables('automationAccountName'),'/jobs/@{encodeURIComponent(body(''Create_job'')?[''properties'']?[''jobId''])}/output')]",
+                                "queries": {
+                                    "x-ms-api-version": "2015-10-31"
+                                }
+                            }
+                        },
+                        "Initialize_variable": {
+                            "runAfter": {},
+                            "type": "InitializeVariable",
+                            "inputs": {
+                                "variables": [
+                                    {
+                                        "name": "Results",
+                                        "type": "array"
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "outputs": {}
+                },
+                "parameters": {
+                    "$connections": {
+                        "value": {
+                            "azureautomation": {
+                                "connectionId": "[resourceId('Microsoft.Web/connections', variables('connections_azureautomation'))]",
+                                "connectionName": "azureautomation",
+                                "id": "[concat('/subscriptions/',subscription().subscriptionId,'/providers/Microsoft.Web/locations/',resourceGroup().location,'/managedApis/',variables('connections_azureautomation'))]"
+                            },
+                            "outlook": {
+                                "connectionId": "[resourceId('Microsoft.Web/connections', variables('connections_outlook'))]",
+                                "connectionName": "outlook",
+                                "id": "[concat('/subscriptions/',subscription().subscriptionId,'/providers/Microsoft.Web/locations/',resourceGroup().location,'/managedApis/', variables('connections_outlook'))]"
+                            }
+                        }
+                    }
+                }
             }
         }
     ]
