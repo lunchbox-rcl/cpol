@@ -1,0 +1,85 @@
+{
+    "properties":{
+        "displayName":"Ensure Key Vaults use the premium tier",
+        "description":"Ensure Key Vaults utilize the premium tier of Key Vaults (HSM backed)",
+        "mode":"Indexed",
+        "parameters":{},
+        "policyRule":{
+            "if": {
+              "allOf": [
+                {
+                  "field": "type",
+                  "equals": "Microsoft.KeyVault/vaults"
+                }
+              ]
+            },
+            "then": {
+              "effect": "deployIfNotExists",
+              "details": {
+                "type": "Microsoft.KeyVault/vaults",
+                "name": "[field('name')]",
+                "roleDefinitionIds": [
+                  "/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+                ],
+                "existenceCondition": {
+                  "field": "Microsoft.KeyVault/vaults/sku.name",
+                  "equals": "Premium"
+                },
+                "deployment": {
+                  "properties": {
+                    "mode": "Incremental",
+                    "template": {
+                      "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                      "contentVersion": "1.0.0.0",
+                      "parameters": {
+                        "location": {
+                          "type": "string"
+                        },
+                        "tenantId": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "accessPolicies": {
+                          "type": "array"
+                        }
+                      },
+                      "resources": [
+                        {
+                          "type": "Microsoft.KeyVault/vaults",
+                          "name": "[parameters('name')]",
+                          "apiVersion": "2018-02-14",
+                          "location": "[parameters('location')]",
+                          "properties": {
+                            "tenantId": "[parameters('tenantId')]",
+                            "sku": {
+                              "name": "Premium",
+                              "family": "A"
+                            },
+                            "accessPolicies": "[parameters('accessPolicies')]"
+                          }
+                        }
+                      ]
+                    },
+                    "parameters": {
+                      "location": {
+                        "value": "[field('location')]"
+                      },
+                      "tenantId": {
+                        "value": "[field('Microsoft.KeyVault/vaults/tenantId')]"
+                      },
+                      "name": {
+                        "value": "[field('name')]"
+                      },
+                      "accessPolicies": {
+                        "value": "[field('Microsoft.Keyvault/vaults/accessPolicies[*]')]"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+    }
+}

@@ -1,0 +1,25 @@
+{
+    "properties":{
+        "displayName":"Ensure Key Vaults use the premium tier",
+        "description":"Denies Key Vaults that don't use the premium tier of Key Vaults (HSM backed)",
+        "mode":"Indexed",
+        "parameters":{},
+        "policyRule":{
+            "if":{
+                "allOf":[
+                    {
+                        "field":"type",
+                        "equals":"Microsoft.KeyVault/vaults"
+                    },
+                    {
+                        "field":"Microsoft.KeyVault/vaults/sku.name",
+                        "notequals":"Premium"
+                    }
+                ]               
+            },
+            "then":{
+                "effect":"deny"
+            }
+        }
+    }
+}
