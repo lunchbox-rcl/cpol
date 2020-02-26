@@ -1,0 +1,51 @@
+{
+    "displayName": "CUSTOM: Audit against Storage Accounts approved network IP Rules.",
+    "policyType": "Custom",
+    "mode": "Indexed",
+    "description": "This policy audits any Storage Account that uses non-approved IP rules.",
+    "parameters": {
+      "effect": {
+        "type": "String",
+        "metadata": {
+          "displayName": "Effect",
+          "description": "Enable or disable the execution of the policy"
+        },
+        "allowedValues": [
+          "Audit",
+          "Deny",
+          "Disabled"
+        ],
+        "defaultValue": "Audit"
+      },
+      "cidrRange": {
+        "type": "Array",
+        "metadata": {
+          "displayName": "cidrRange",
+          "description": "Aproved CIDR ranges."
+        }
+      }
+    },
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "equals": "Microsoft.Storage/storageAccounts"
+          },
+          {
+            "count": {
+              "field": "Microsoft.Storage/storageAccounts/networkAcls.ipRules[*]"
+            },
+            "greaterOrEquals": 1
+          },
+          {
+            "field": "Microsoft.Storage/storageAccounts/networkAcls.ipRules[*].value",
+            "notIn": "[parameters('cidrRange')]"
+          }
+        ]
+      },
+      "then": {
+        "effect": "[parameters('effect')]"
+      }
+    }
+  }

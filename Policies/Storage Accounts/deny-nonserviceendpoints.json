@@ -23,13 +23,6 @@
         "Disabled"
       ],
       "defaultValue": "Audit"
-    },
-    "cidrRange": {
-      "type": "Array",
-      "metadata": {
-        "displayName": "cidrRange",
-        "description": null
-      }
     }
   },
   "policyRule": {
@@ -48,10 +41,6 @@
             {
               "field": "Microsoft.Storage/storageAccounts/networkAcls.virtualNetworkRules[*].id",
               "exists": "false"
-            },
-            {
-              "field": "Microsoft.Storage/storageAccounts/networkAcls.ipRules[*].value",
-              "notin": "[parameters('cidrRange')]"
             }
           ]
         }
