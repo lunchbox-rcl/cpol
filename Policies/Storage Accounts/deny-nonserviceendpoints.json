@@ -1,15 +1,5 @@
 {
-  "displayName": "CUSTOM: Storage Accounts should use a virtual network service endpoint",
-  "policyType": "Custom",
-  "mode": "Indexed",
-  "description": "This policy audits any Storage Account not configured to use a virtual network service endpoint.",
-  "metadata": {
-    "category": "Network",
-    "createdBy": "3d4d1c1f-b124-45aa-894e-7afd2b67b035",
-    "createdOn": "2020-02-25T23:49:59.738825Z",
-    "updatedBy": "3d4d1c1f-b124-45aa-894e-7afd2b67b035",
-    "updatedOn": "2020-02-26T04:17:37.2658163Z"
-  },
+  "displayName": "Storage Accounts must use a virtual network service endpoint",
   "parameters": {
     "effect": {
       "type": "String",
@@ -22,7 +12,7 @@
         "Deny",
         "Disabled"
       ],
-      "defaultValue": "Audit"
+      "defaultValue": "Deny"
     }
   },
   "policyRule": {
@@ -43,6 +33,12 @@
               "exists": "false"
             }
           ]
+        },
+        {
+          "not":{
+            "field": "tags['ms-resource-usage']",
+            "equals": "azure-cloud-shell"
+          }
         }
       ]
     },

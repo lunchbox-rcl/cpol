@@ -1,8 +1,8 @@
 {
-    "displayName": "CUSTOM: Audit against Storage Accounts approved network IP Rules.",
+    "displayName": "Audit or Deny against Storage Accounts approved network IP Rules.",
     "policyType": "Custom",
     "mode": "Indexed",
-    "description": "This policy audits any Storage Account that uses non-approved IP rules.",
+    "description": "This policy controls any Storage Account that uses non-approved IP rules.",
     "parameters": {
       "effect": {
         "type": "String",

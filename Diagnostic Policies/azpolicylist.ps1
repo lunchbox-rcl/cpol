@@ -38,7 +38,7 @@ Function Get-ChildrenInfo
       {
         if($assignment -ne $null)
         {
-          write-host 'a' $assignment.properties.displayname -foregroundcolor red
+          write-host $assignment.properties.displayname -foregroundcolor red
         }
 
         else
